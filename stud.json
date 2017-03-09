@@ -1,0 +1,28 @@
+[
+	{
+		"firstName": "Yaroslav",
+		"lastName": "Shcherban",
+		"gender": "boy"
+	},
+
+	{
+		"firstName": "Luiza",
+		"lastName": "Smith",
+		"gender": "girl"
+	},
+	{
+		"firstName": "Ivan",
+		"lastName": "Onoprienko",
+		"gender": "1"
+	},
+	{
+		"firstName": "Oksana",
+		"lastName": "Sen",
+		"gender": "0"
+	},
+	{
+		"firstName": "Alexey",
+		"lastName": "Ivanov",
+		"gender": "boy"
+	}
+]
