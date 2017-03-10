@@ -105,20 +105,42 @@ function readStudentsFromCSVFile(file) {
 }
 
 function readStudentsFromJSONFile(file) {
-    const 	data			= JSON.parse(fs.readFileSync(jsonFile, 'utf8')) || [],
-            origHeaders		= ['firstName', 'lastName', 'gender'] || [],
-            guessedHeaders	= guessHeaders(origHeaders);
-
-    const studentArray = data.filter( item => Object.keys(item).length > 1 )	// removing empty objects
-        .map( item => objectToStudent(guessedHeaders, item));
-    
-    return studentArray;
+    fs.readFile(jsonFile, (err, data) => {
+       if (err) throw err;
+       
+       const getJsonFromfileContent = JSON.parse(data);
+       
+       origHeaders		= ['firstName', 'lastName', 'gender'] || [],
+       guessedHeaders	= guessHeaders(origHeaders);
+       
+       const studentArray = getJsonFromfileContent.filter( item => Object.keys(item).length > 1 )	// removing empty objects
+            .map( item => objectToStudent(guessedHeaders, item));
+        
+       console.log(studentArray); 
+  });
 }
 
 process.argv.forEach(function (val, index, array) {
   if (val === 'fromJson') console.log(readStudentsFromJSONFile(jsonFile));
   if (val === 'fromCvs') readStudentsFromCSVFile(csvFile);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
