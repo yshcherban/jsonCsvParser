@@ -1,11 +1,13 @@
 const   fs      = require('fs'),
         path    = require('path'),
         mime    = require('mime'),
+        XLSX    = require('xlsx'),
         baby    = require('babyparse'),
         Promise	= require('bluebird');
 
 
 const readFile = Promise.promisify(fs.readFile);
+const readXlsxFile = Promise.promisify(XLSX.readFile);
 
 const parseCSVFile = function(file, config) {
 	return new Promise((resolve, reject) => {
@@ -131,15 +133,33 @@ function readStudentsFromJSONFile(file) {
  * Reads students from XLSX file
  */
 function readStudentsFromXlsxFile(file) {
-    
+    const   workbook = XLSX.readFile(file)
+            sheetNameList = workbook.SheetNames,
+            getJsonFromSheetNameList = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]]),
+            origHeaders		= ['firstname', 'lastname', 'gender'] || [],
+            guessedHeaders	= guessHeaders(origHeaders);
+        
+    const studentArray = getJsonFromSheetNameList.filter( item => Object.keys(item).length > 1 )	// removing empty objects
+                .map( item => objectToStudent(guessedHeaders, item));
+        
+    console.log(studentArray);
 }
 
 /**
  * Gets passed file type
  */
 function getTypeOfFile(file) {
-    if ((path.extname(file) === '.json') || (mime.lookup(file) === 'application/json' )) return 'json';
-    if ((path.extname(file) === '.csv') || (mime.lookup(file) === 'text/csv' )) return 'csv';
+    switch(true) {
+        case (path.extname(file) === '.json') || (mime.lookup(file) === 'application/json'):
+            return 'json';
+            break;
+        case (path.extname(file) === '.csv') || (mime.lookup(file) === 'text/csv'):
+            return 'csv';
+            break;
+        case (path.extname(file) === '.xlsx') || (mime.lookup(file) === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'):
+            return 'xlsx';
+            break;
+    }
 }
 
 /**
@@ -152,6 +172,9 @@ process.argv.forEach(function (val, index, array) {
         break;
     case 'csv':
         readStudentsFromCSVFile(val);
+        break;
+    case 'xlsx':
+        readStudentsFromXlsxFile(val);
         break;
   }
 });
