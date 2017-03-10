@@ -1,10 +1,12 @@
 const   fs      = require('fs'),
+        path    = require('path'),
+        mime    = require('mime'),
         baby    = require('babyparse'),
         Promise	= require('bluebird');
 
 //const app = express();
-const csvFile = 'students2.csv';
-const jsonFile = 'stud.json';
+//const csvFile = 'students2.csv';
+//const jsonFile = 'stud.json';
 
 const parseCSVFile = function(file, config) {
 	return new Promise((resolve, reject) => {
@@ -105,7 +107,7 @@ function readStudentsFromCSVFile(file) {
 }
 
 function readStudentsFromJSONFile(file) {
-    fs.readFile(jsonFile, (err, data) => {
+    fs.readFile(file, (err, data) => {
        if (err) throw err;
        
        try {
@@ -129,17 +131,22 @@ function readStudentsFromXlsxFile(file) {
     
 }
 
-process.argv.forEach(function (val, index, array) {
-  switch (val) {
-      case 'fromJson':
-        readStudentsFromJSONFile(jsonFile); 
-        break;
-      case 'fromCvs': 
-        readStudentsFromCSVFile(csvFile);
-        break;
-  }  
-});
 
+function getTypeOfFile(file) {
+    if ((path.extname(file) === '.json') || (mime.lookup(file) === 'application/json' )) return 'json';
+    if ((path.extname(file) === '.csv') || (mime.lookup(file) === 'text/csv' )) return 'csv';
+}
+
+process.argv.forEach(function (val, index, array) {
+  switch (getTypeOfFile(val)) {
+    case 'json':
+        readStudentsFromJSONFile(val); 
+        break;
+    case 'csv':
+        readStudentsFromCSVFile(val);
+        break;
+  }
+});
 
 
 
