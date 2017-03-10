@@ -124,9 +124,20 @@ function readStudentsFromJSONFile(file) {
   });
 }
 
+
+function readStudentsFromXlsxFile(file) {
+    
+}
+
 process.argv.forEach(function (val, index, array) {
-  if (val === 'fromJson') readStudentsFromJSONFile(jsonFile);
-  if (val === 'fromCvs') readStudentsFromCSVFile(csvFile);
+  switch (val) {
+      case 'fromJson':
+        readStudentsFromJSONFile(jsonFile); 
+        break;
+      case 'fromCvs': 
+        readStudentsFromCSVFile(csvFile);
+        break;
+  }  
 });
 
 
