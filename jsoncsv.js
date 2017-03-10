@@ -6,8 +6,8 @@ const   fs      = require('fs'),
         Promise	= require('bluebird');
 
 
-const readFile = Promise.promisify(fs.readFile);
-const readXlsxFile = Promise.promisify(XLSX.readFile);
+const readJsonFile = Promise.promisify(fs.readFile);
+const readXlsxFile = Promise.method(XLSX.readFile);
 
 const parseCSVFile = function(file, config) {
 	return new Promise((resolve, reject) => {
@@ -113,7 +113,7 @@ function readStudentsFromCSVFile(file) {
  */
 function readStudentsFromJSONFile(file) {
     
-    return readFile(file, "utf8").then( contents => {
+    return readJsonFile(file, "utf8").then( contents => {
         const   getJsonFromfileContent = JSON.parse(contents),
                 origHeaders		= ['firstName', 'lastName', 'gender'] || [],
                 guessedHeaders	= guessHeaders(origHeaders);
@@ -133,16 +133,20 @@ function readStudentsFromJSONFile(file) {
  * Reads students from XLSX file
  */
 function readStudentsFromXlsxFile(file) {
-    const   workbook = XLSX.readFile(file)
-            sheetNameList = workbook.SheetNames,
-            getJsonFromSheetNameList = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]]),
-            origHeaders		= ['firstname', 'lastname', 'gender'] || [],
-            guessedHeaders	= guessHeaders(origHeaders);
-        
-    const studentArray = getJsonFromSheetNameList.filter( item => Object.keys(item).length > 1 )	// removing empty objects
-                .map( item => objectToStudent(guessedHeaders, item));
-        
-    console.log(studentArray);
+    return readXlsxFile(file).then(readFile => {
+        const   workbook = readFile,
+                sheetNameList = workbook.SheetNames,
+                getJsonFromSheetNameList = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]]),
+                origHeaders		= ['firstname', 'lastname', 'gender'] || [],
+                guessedHeaders	= guessHeaders(origHeaders);
+            
+        const studentArray = getJsonFromSheetNameList.filter( item => Object.keys(item).length > 1 )	// removing empty objects
+                    .map( item => objectToStudent(guessedHeaders, item));
+            
+        console.log(studentArray);  
+    }).catch(function(e) {
+        console.log("Error reading file", e);
+    });
 }
 
 /**
@@ -178,16 +182,6 @@ process.argv.forEach(function (val, index, array) {
         break;
   }
 });
-
-
-
-
-
-
-
-
-
-
 
 
 
