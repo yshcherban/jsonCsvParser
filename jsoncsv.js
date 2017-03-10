@@ -108,15 +108,19 @@ function readStudentsFromJSONFile(file) {
     fs.readFile(jsonFile, (err, data) => {
        if (err) throw err;
        
-       const getJsonFromfileContent = JSON.parse(data);
+       try {
+            const getJsonFromfileContent = JSON.parse(data);
+            origHeaders		= ['firstName', 'lastName', 'gender'] || [],
+            guessedHeaders	= guessHeaders(origHeaders);
+
+            const studentArray = getJsonFromfileContent.filter( item => Object.keys(item).length > 1 )	// removing empty objects
+                .map( item => objectToStudent(guessedHeaders, item));
+
+            console.log(studentArray);        
+       } catch (err) {
+           console.log('Invalid jSon file');
+       }
        
-       origHeaders		= ['firstName', 'lastName', 'gender'] || [],
-       guessedHeaders	= guessHeaders(origHeaders);
-       
-       const studentArray = getJsonFromfileContent.filter( item => Object.keys(item).length > 1 )	// removing empty objects
-            .map( item => objectToStudent(guessedHeaders, item));
-        
-       console.log(studentArray); 
   });
 }
 
