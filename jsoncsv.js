@@ -121,7 +121,7 @@ function readStudentsFromJSONFile(file) {
 }
 
 process.argv.forEach(function (val, index, array) {
-  if (val === 'fromJson') console.log(readStudentsFromJSONFile(jsonFile));
+  if (val === 'fromJson') readStudentsFromJSONFile(jsonFile);
   if (val === 'fromCvs') readStudentsFromCSVFile(csvFile);
 });
 
