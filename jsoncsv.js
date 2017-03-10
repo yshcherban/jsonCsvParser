@@ -89,6 +89,17 @@ const objectToStudent = function(headers, obj) {
 };
 
 /**
+ * Casts the data to common structure before save it to DB
+ */
+function getStudentsBeforeInsertIntoDb (data, headers) {
+    const studentArray = data.filter( item => Object.keys(item).length > 1 )	// removing empty objects
+			.map( item => objectToStudent(headers, item));
+        
+    console.log(studentArray);
+}
+
+
+/**
  * Reads students from CSV file
  */
 function readStudentsFromCSVFile(file) {
@@ -97,11 +108,8 @@ function readStudentsFromCSVFile(file) {
 		const 	data			= result.data || [],
 				origHeaders		= result.meta.fields || [],
 				guessedHeaders	= guessHeaders(origHeaders);
-
-		const studentArray = data.filter( item => Object.keys(item).length > 1 )	// removing empty objects
-			.map( item => objectToStudent(guessedHeaders, item));
         
-        console.log(studentArray);
+        getStudentsBeforeInsertIntoDb(data, guessedHeaders);
 		
 	}).catch(function(e) {
         console.log("Error reading file", e);
@@ -118,10 +126,7 @@ function readStudentsFromJSONFile(file) {
                 origHeaders		= ['firstName', 'lastName', 'gender'] || [],
                 guessedHeaders	= guessHeaders(origHeaders);
         
-        const studentArray = getJsonFromfileContent.filter( item => Object.keys(item).length > 1 )	// removing empty objects
-                    .map( item => objectToStudent(guessedHeaders, item));
-        
-        console.log(studentArray);
+        getStudentsBeforeInsertIntoDb(getJsonFromfileContent, guessedHeaders);
                     
     }).catch(function(e) {
         console.log("Error reading file", e);
@@ -140,10 +145,8 @@ function readStudentsFromXlsxFile(file) {
                 origHeaders		= ['firstname', 'lastname', 'gender'] || [],
                 guessedHeaders	= guessHeaders(origHeaders);
             
-        const studentArray = getJsonFromSheetNameList.filter( item => Object.keys(item).length > 1 )	// removing empty objects
-                    .map( item => objectToStudent(guessedHeaders, item));
-            
-        console.log(studentArray);  
+        getStudentsBeforeInsertIntoDb(getJsonFromSheetNameList, guessedHeaders);
+        
     }).catch(function(e) {
         console.log("Error reading file", e);
     });
