@@ -4,9 +4,8 @@ const   fs      = require('fs'),
         baby    = require('babyparse'),
         Promise	= require('bluebird');
 
-//const app = express();
-//const csvFile = 'students2.csv';
-//const jsonFile = 'stud.json';
+
+const readFile = Promise.promisify(fs.readFile);
 
 const parseCSVFile = function(file, config) {
 	return new Promise((resolve, reject) => {
@@ -87,7 +86,11 @@ const objectToStudent = function(headers, obj) {
 	};
 };
 
+/**
+ * Reads students from CSV file
+ */
 function readStudentsFromCSVFile(file) {
+    
 	return parseCSVFile(file, { header: true }).then( result => {
 		const 	data			= result.data || [],
 				origHeaders		= result.meta.fields || [],
@@ -96,47 +99,52 @@ function readStudentsFromCSVFile(file) {
 		const studentArray = data.filter( item => Object.keys(item).length > 1 )	// removing empty objects
 			.map( item => objectToStudent(guessedHeaders, item));
         
-		return {
-			students: studentArray,
-			errors: result.errors,
-			meta: result.meta
-		}
-	}).then(result => {
-        console.log(result.students);
+        console.log(studentArray);
+		
+	}).catch(function(e) {
+        console.log("Error reading file", e);
     });
 }
 
+/**
+ * Reads students from JSON file
+ */
 function readStudentsFromJSONFile(file) {
-    fs.readFile(file, (err, data) => {
-       if (err) throw err;
-       
-       try {
-            const getJsonFromfileContent = JSON.parse(data);
-            origHeaders		= ['firstName', 'lastName', 'gender'] || [],
-            guessedHeaders	= guessHeaders(origHeaders);
-
-            const studentArray = getJsonFromfileContent.filter( item => Object.keys(item).length > 1 )	// removing empty objects
-                .map( item => objectToStudent(guessedHeaders, item));
-
-            console.log(studentArray);        
-       } catch (err) {
-           console.log('Invalid jSon file');
-       }
-       
-  });
+    
+    return readFile(file, "utf8").then( contents => {
+        const   getJsonFromfileContent = JSON.parse(contents),
+                origHeaders		= ['firstName', 'lastName', 'gender'] || [],
+                guessedHeaders	= guessHeaders(origHeaders);
+        
+        const studentArray = getJsonFromfileContent.filter( item => Object.keys(item).length > 1 )	// removing empty objects
+                    .map( item => objectToStudent(guessedHeaders, item));
+        
+        console.log(studentArray);
+                    
+    }).catch(function(e) {
+        console.log("Error reading file", e);
+    });
+    
 }
 
-
+/**
+ * Reads students from XLSX file
+ */
 function readStudentsFromXlsxFile(file) {
     
 }
 
-
+/**
+ * Gets passed file type
+ */
 function getTypeOfFile(file) {
     if ((path.extname(file) === '.json') || (mime.lookup(file) === 'application/json' )) return 'json';
     if ((path.extname(file) === '.csv') || (mime.lookup(file) === 'text/csv' )) return 'csv';
 }
 
+/**
+ * Processes passed command line arguments
+ */
 process.argv.forEach(function (val, index, array) {
   switch (getTypeOfFile(val)) {
     case 'json':
