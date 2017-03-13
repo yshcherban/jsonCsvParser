@@ -131,7 +131,6 @@ function readStudentsFromJSONFile(file) {
     }).catch(function(e) {
         console.log("Error reading file", e);
     });
-    
 }
 
 /**
@@ -142,11 +141,10 @@ function readStudentsFromXlsxFile(file) {
         const   workbook = readFile,
                 sheetNameList = workbook.SheetNames,
                 getJsonFromSheetNameList = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]]),
-                origHeaders		= ['firstname', 'lastname', 'gender'] || [],
+                origHeaders		= XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]], {header: 1})[0] || [],
                 guessedHeaders	= guessHeaders(origHeaders);
             
-        getStudentsBeforeInsertIntoDb(getJsonFromSheetNameList, guessedHeaders);
-        
+            getStudentsBeforeInsertIntoDb(getJsonFromSheetNameList, guessedHeaders);
     }).catch(function(e) {
         console.log("Error reading file", e);
     });
