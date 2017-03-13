@@ -120,14 +120,20 @@ function readStudentsFromCSVFile(file) {
  * Reads students from JSON file
  */
 function readStudentsFromJSONFile(file) {
-    
     return readJsonFile(file, "utf8").then( contents => {
-        const   getJsonFromfileContent = JSON.parse(contents),
-                origHeaders		= ['firstName', 'lastName', 'gender'] || [],
-                guessedHeaders	= guessHeaders(origHeaders);
         
-        getStudentsBeforeInsertIntoDb(getJsonFromfileContent, guessedHeaders);
-                    
+        const   getJsonFromfileContent = JSON.parse(contents);
+        let origHeaders = [];
+        
+        for (let i = 0; i < getJsonFromfileContent.length; i++) {
+            for (let cap in getJsonFromfileContent[i]) {
+                origHeaders.push(cap);
+            }
+            const guessedHeaders	= guessHeaders(origHeaders);
+            getStudentsBeforeInsertIntoDb([getJsonFromfileContent[i]], guessedHeaders);
+            origHeaders = [];
+        }
+        
     }).catch(function(e) {
         console.log("Error reading file", e);
     });

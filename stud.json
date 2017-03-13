@@ -1,11 +1,15 @@
 [
 	{
-		"firstName": "Yaroslav",
-		"lastName": "Shcherban",
+		"name": "Yaroslav",
+		"lastname": "Shcherban",
 		"gender": "boy"
 	},
-
-	{
+    {
+		"firstname": "Slava",
+		"lastname": "Kondratuk",
+		"gender": "0"
+	},
+    {
 		"firstName": "Luiza",
 		"lastName": "Smith",
 		"gender": "girl"
