@@ -6,12 +6,24 @@ const   fs      = require('fs'),
         Promise	= require('bluebird');
 
 
+class ProcessStatus {
+    getTypeEvent(error) {
+        //if (event instanceof SyntaxError) console.log("Oooop! Something wrong: ", event.message);
+        console.log( error.stack );
+        console.log( "Type: " + error.type );
+        console.log( "Message: " + error.message );
+        console.log( "Detail: " + error.detail );
+        console.log( "Extended Info: " + error.extendedInfo );
+        console.log( "Error Code: " + error.errorCode );
+    }
+}
+
 // Returns json file and origHeaders (headers from parsed file)
-class Parser {
+class Parser extends ProcessStatus {
     constructor(){
+        super();
         this.readJsonFile = Promise.promisify(fs.readFile);
         this.readXlsxFile = Promise.method(XLSX.readFile);
-        this.readCsvFile = Promise.promisify(baby.parseFiles);
     }
 
     canParseFile(file) {
@@ -44,6 +56,8 @@ class Parser {
     jsonParse(file) {
         return this.readJsonFile(file, "utf8").then( contents => {
             return JSON.parse(contents);
+        }).catch(e => {
+            this.getTypeEvent(e);
         });
     }
 
@@ -57,11 +71,22 @@ class Parser {
     }
 
     csvParse(file) {
-        return this.readCsvFile(file).then( result => {
+        return this.getPromiseFromCSVFile(file).then( result => {
             return {
                 data: result.data || [],
                 origHeaders: result.meta.fields || []
-            }
+            };
+        });
+    }
+
+    getPromiseFromCSVFile(file) {
+        return new Promise((resolve, reject) => {
+            baby.parseFiles(file, {
+                header:     true,
+                complete:	(results, file) => { resolve(results) },
+                error: 		(error, file) => { reject(error) }
+            });
+            // no return
         });
     }
 
