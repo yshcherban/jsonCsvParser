@@ -117,7 +117,7 @@ class DbPreparer {
             return this.preparedData(data, guessedHeaders);
         } else {
             if (obj.length > 0) {
-                
+
             }
         }
     }
