@@ -1,9 +1,7 @@
 const   baby    = require('babyparse'),
         path    = require('path'),
         mime    = require('mime'),
-        Promise	= require('bluebird'),
-        dbPreparer = require('./Dbpreparer'),
-        parserErrorHandler = require('./ParserError');
+        Promise	= require('bluebird');
 
 
 function canParseFile(file) {
@@ -13,10 +11,6 @@ function canParseFile(file) {
 function parse(file) {
     return getPromiseFromCSVFile(file).then(result => {
         return result.data || [];
-    }).then( res => {
-        return dbPreparer.getPreparedData(res);
-    }).catch((err) => {
-        return parserErrorHandler(err);
     });
 }
 

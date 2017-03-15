@@ -1,9 +1,7 @@
 const   fs      = require('fs'),
         path    = require('path'),
         mime    = require('mime'),
-        Promise	= require('bluebird'),
-        dbPreparer = require('./Dbpreparer'),
-        parserErrorHandler = require('./ParserError');
+        Promise	= require('bluebird');
 
 
 const readJsonFile = Promise.promisify(fs.readFile);
@@ -15,10 +13,6 @@ function canParseFile(file) {
 function parse (file) {
     return readJsonFile(file, "utf8").then( contents => {
         return JSON.parse(contents);
-    }).then( res => {
-        return dbPreparer.getPreparedData(res);
-    }).catch((err) => {
-        return parserErrorHandler(err);
     });
 }
 

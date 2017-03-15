@@ -1,9 +1,7 @@
 const   path    = require('path'),
         mime    = require('mime'),
         XLSX    = require('xlsx'),
-        Promise	= require('bluebird'),
-        dbPreparer = require('./Dbpreparer'),
-        parserErrorHandler = require('./ParserError');
+        Promise	= require('bluebird');
 
 const readXlsxFile = Promise.method(XLSX.readFile);
 
@@ -14,11 +12,7 @@ function canParseFile(file) {
 function parse(file) {
     return readXlsxFile(file).then(readFile => {
         return XLSX.utils.sheet_to_json(readFile.Sheets[readFile.SheetNames[0]]) || [];
-    }).then( res => {
-        return dbPreparer.getPreparedData(res);
-    }).catch((err) => {
-        return parserErrorHandler(err);
-    });;
+    });
 }
 
 module.exports.canParseFile = canParseFile;
