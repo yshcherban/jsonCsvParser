@@ -22,10 +22,9 @@ class ProcessStatus {
 
 /**************************************************************************/
 class DbPreparer {
-
-    /** possible values for well-known params */
-    guessTable() {
-        return {
+    constructor() {
+        /** possible values for well-known params */
+        this.guessTable = {
             firstName:	['name', 'firstname'],
             lastName:	['surname', 'lastname'],
             gender: 	['gender'],
@@ -45,7 +44,7 @@ class DbPreparer {
         if(!Array.isArray(this.possibleValues(fieldToGuess))) return undefined;	// there is no such value in table
 
         return fieldNames.find( fieldName => {
-            return this.possibleValues.findIndex( possibleValue => possibleValue === this.lowFieldName(fieldName) ) !== -1;
+            return this.possibleValues(fieldToGuess).findIndex( possibleValue => possibleValue === this.lowFieldName(fieldName) ) !== -1;
         });
     };
 
@@ -110,20 +109,16 @@ class DbPreparer {
         };
     };
 
-    getGuessedHeaders(origHeaders) {
-        return this.guessHeaders(origHeaders);
-    }
-
     getPreparedData(obj) {
-        const origHeaders = this.getGuessedHeaders(obj.origHeaders);
+        const guessedHeaders = this.guessHeaders(obj.origHeaders);
         const data = obj.data;
 
-        console.log(this.preparedData(data, origHeaders));
+        return this.preparedData(data, guessedHeaders);
     }
 
-    preparedData(data, origHeaders) {
+    preparedData(data, headers) {
         return data.filter( item => Object.keys(item).length > 1 )	// removing empty objects
-            .map( item => this.objectToStudent(this.getGuessedHeaders(), item));
+            .map( item => this.objectToStudent(headers, item));
     }
 }
 
@@ -167,13 +162,11 @@ class Parser extends DbPreparer {
     jsonParse(file) {
         return this.readJsonFile(file, "utf8").then( contents => {
             return JSON.parse(contents);
-        }).catch(e => {
-            //this.getTypeEvent(e);
-        });
+        })
     }
 
     xlsxParse(file) {
-        const readXlsxFile = this.readXlsxFile(file).then(readFile => {
+        return this.readXlsxFile(file).then(readFile => {
             return {
                 data: XLSX.utils.sheet_to_json(readFile.Sheets[readFile.SheetNames[0]]) || [],
                 origHeaders: XLSX.utils.sheet_to_json(readFile.Sheets[readFile.SheetNames[0]], {header: 1})[0] || []
@@ -189,6 +182,8 @@ class Parser extends DbPreparer {
                 data: result.data || [],
                 origHeaders: result.meta.fields || []
             };
+        }).then( res => {
+            return this.getPreparedData(res);
         });
     }
 
