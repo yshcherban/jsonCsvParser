@@ -110,10 +110,16 @@ class DbPreparer {
     };
 
     getPreparedData(obj) {
-        const guessedHeaders = this.guessHeaders(obj.origHeaders);
-        const data = obj.data;
+        if (obj.origHeaders !== undefined && data !== obj.data) {
+            const guessedHeaders = this.guessHeaders(obj.origHeaders);
+            const data = obj.data;
 
-        return this.preparedData(data, guessedHeaders);
+            return this.preparedData(data, guessedHeaders);
+        } else {
+            if (obj.length > 0) {
+                
+            }
+        }
     }
 
     preparedData(data, headers) {
@@ -126,7 +132,7 @@ class DbPreparer {
 
 // Returns json file and origHeaders (headers from parsed file)
 class Parser extends DbPreparer {
-    constructor(){
+    constructor() {
         super();
         this.readJsonFile = Promise.promisify(fs.readFile);
         this.readXlsxFile = Promise.method(XLSX.readFile);
@@ -162,7 +168,9 @@ class Parser extends DbPreparer {
     jsonParse(file) {
         return this.readJsonFile(file, "utf8").then( contents => {
             return JSON.parse(contents);
-        })
+        }).then( res => {
+            return this.getPreparedData(res);
+        });
     }
 
     xlsxParse(file) {
