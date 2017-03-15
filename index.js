@@ -1,5 +1,9 @@
 const Parser = require('./Parser');
 
-Parser.parse('stud.json').then(res => {
+Parser.parse('students.xlsx');
+/*.then((res) => {
     console.log(res);
-});
+});*/
+//.then( res => {
+    //return res;
+//});
