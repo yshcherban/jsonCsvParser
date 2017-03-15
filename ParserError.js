@@ -1,22 +1,21 @@
-class ParserError extends Error {
-    constructor(settings) {
-        super();
-        this.settings = settings || {};
-        //this.implementationContext = implementationContext;
+function ParserError(err) {
+    this.message = err.message;
+    this.name = 'Parser Error';
+    this.type = err.type;
+    Error.captureStackTrace(this, ParserError);
+}
+ParserError.prototype = Object.create(Error.prototype);
+ParserError.prototype.constructor = ParserError;
 
-        // Override the default name property (Error)
-        this.name = "ParserError";
-
-        // custom error structure
-        this.type = settings.type || "Application";
-        this.message = ( settings.message || "An error occurred." );
-        this.detail = ( settings.detail || "" );
-        this.extendedInfo = ( settings.extendedInfo || "" );
-        this.errorCode = ( settings.errorCode || "" );
-
-        this.isAppError = true;
-        Error.captureStackTrace( this, this.constructor);
+function getTypeOfError(err) {
+    switch(true) {
+        case (err instanceof SyntaxError):
+            return new ParserError({
+                message: err.message,
+                type: 'SyntaxError'
+            });
+        break;
     }
 }
 
-module.exports = ParserError;
+module.exports = getTypeOfError;
