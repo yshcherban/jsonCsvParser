@@ -5,16 +5,9 @@ const   chai = require('chai'),
         jsonParser = require('../Jsonparser');
 
 describe('JSONparser', () => {
-    it('should return json', (done) => {
-        jsonParser.parse('stud.json').then((res) => {
-            res.should.be.json;
-            done();
-        })
-    });
-
     it('should have the property "firstName"', (done) => {
         jsonParser.parse('stud.json').then((res) => {
-            res[0].should.have.property('firstName');
+            res.should.have.deep.property('[0].firstName');
             done();
         })
     });
