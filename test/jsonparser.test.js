@@ -5,7 +5,7 @@ const   chai = require('chai'),
         jsonParser = require('../Jsonparser');
 
 describe('JSONparser', () => {
-    it('should have the property "firstName"', (done) => {
+    it('should consist the same pair-values', (done) => {
         jsonParser.parse('stud.json').then((res) => {
             res.should.deep.equal([{
                     "lastname": "Shcherban",

@@ -5,6 +5,28 @@ const   chai = require('chai'),
         csvParser = require('../Csvparser');
 
 describe('CSVparser', () => {
+    it('should consist the same pair-values"', (done) => {
+        csvParser.parse('students.csv').then( (res) => {
+            res.should.deep.equal([{
+                "firstname": "Yaroslav",
+                "lastname": "Shcherban",
+                "gender": "male"
+            },
+            {
+                "firstname": "Ivan",
+                "lastname": "Onoprienko",
+                "gender": "male"
+            },
+            {
+                "firstname": "Bob",
+                "lastname": "Smith",
+                "gender": "male"
+            }]
+            );
+            done();
+        });
+    });
+
     it('should return error for wrong file type', (done) => {
         csvParser.parse('students.xml').catch( e => {
             done();
@@ -12,7 +34,7 @@ describe('CSVparser', () => {
     });
 
     it('should return error of broken file', (done) => {
-        csvParser.parse('stud.json').catch( e => {
+        csvParser.parse('students-broken.csv').catch( e => {
             done();
         });
     });

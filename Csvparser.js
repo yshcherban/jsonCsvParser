@@ -16,11 +16,19 @@ function parse(file) {
 
 function getPromiseFromCSVFile(file) {
     return new Promise((resolve, reject) => {
-        baby.parseFiles(file, {
+        const parsedResponse = baby.parseFiles(file, {
             header:     true,
-            complete:	(results, file) => { resolve(results) },
-            error: 		(error, file) => { reject(error) }
+            complete:	(results, file) => {
+                if (results.errors.length > 0) {
+                    reject(new Error(results.errors[0].message));
+                } else {
+                    resolve(results)
+                }
+            }
         });
+        if (parsedResponse.errors.length > 0) {
+            reject(new Error(parsedResponse.errors[0].message));
+        };
         // no return
     });
 }
