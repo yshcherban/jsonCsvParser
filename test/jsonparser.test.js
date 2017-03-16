@@ -7,7 +7,36 @@ const   chai = require('chai'),
 describe('JSONparser', () => {
     it('should have the property "firstName"', (done) => {
         jsonParser.parse('stud.json').then((res) => {
-            res.should.have.deep.property('[0].firstName');
+            res.should.deep.equal([{
+                    "lastname": "Shcherban",
+                    "gender": "boy",
+                    "firstName": "Yaroslav"
+                },
+                {
+                    "firstname": "Slava",
+                    "lastname": "Kondratuk",
+                    "gender": "0"
+                },
+                {
+                    "firstName": "Luiza",
+                    "lastName": "Smith",
+                    "gender": "girl"
+                },
+                {
+                    "firstName": "Ivan",
+                    "lastName": "Onoprienko",
+                    "gender": "1"
+                },
+                {
+                    "firstName": "Oksana",
+                    "lastName": "Sen",
+                    "gender": "0"
+                },
+                {
+                    "firstName": "Alexey",
+                    "lastName": "Ivanov",
+                    "gender": "boy"
+                }]);
             done();
         })
     });
