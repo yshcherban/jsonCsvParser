@@ -7,10 +7,10 @@ const xlsxParser = require('./Xlsxparser');
 //     console.log(res);
 // });
 
-csvParser.parse('students.csv').then(res => {
-    console.log(res);
-});
-
-// xlsxParser.parse('students.xlsx').then(res => {
+// csvParser.parse('students.csv').then(res => {
 //     console.log(res);
 // });
+
+xlsxParser.parse('students.xlsx').then(res => {
+    console.log(res);
+});

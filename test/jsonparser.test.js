@@ -48,7 +48,7 @@ describe('JSONparser', () => {
     });
 
     it('should return error of broken file', (done) => {
-        jsonParser.parse('stud.json').catch( e => {
+        jsonParser.parse('stud-broken.json').catch( e => {
             done();
         });
     });
