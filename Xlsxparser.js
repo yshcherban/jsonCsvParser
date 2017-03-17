@@ -3,6 +3,12 @@ const   path    = require('path'),
         XLSX    = require('xlsx'),
         Promise	= require('bluebird');
 
+/**
+ * Represents a simple XLSX parser with actions:
+ * @function canParseFile( <string> ) - checks if file is supported
+ * @function parse( <string> | <Buffer> | <integer> ) - reads the file and returns the array of objects (JSON).
+ */
+
 const readXlsxFile = Promise.method(XLSX.readFile);
 
 function canParseFile(file) {

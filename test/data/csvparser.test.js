@@ -2,7 +2,7 @@
 
 const   chai = require('chai'),
         should = chai.should(),
-        csvParser = require('../Csvparser');
+        csvParser = require('../../Csvparser');
 
 describe('CSVparser', () => {
     it('should consist the same pair-values"', (done) => {
@@ -27,13 +27,13 @@ describe('CSVparser', () => {
         });
     });
 
-    it('should return error for wrong file type', (done) => {
+    it('should return error as "Error: Unsupported file type." for wrong file type', (done) => {
         csvParser.parse('students.xml').catch( e => {
             done();
         });
     });
 
-    it('should return error of broken file', (done) => {
+    it('should return error as "Error: Unable to auto-detect delimiting character, defaulted to (,)" for broken file', (done) => {
         csvParser.parse('students-broken.csv').catch( e => {
             done();
         });

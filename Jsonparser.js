@@ -3,6 +3,11 @@ const   fs      = require('fs'),
         mime    = require('mime'),
         Promise	= require('bluebird');
 
+/**
+ * Represents a simple JSON parser with actions:
+ * @function canParseFile( <string> ) - checks if file is supported
+ * @function parse( <string> | <Buffer> | <integer> ) - reads the entire contents of a file and returns the array of objects (JSON)
+ */
 
 const readJsonFile = Promise.promisify(fs.readFile);
 

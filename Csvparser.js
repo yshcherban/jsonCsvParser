@@ -3,6 +3,12 @@ const   baby    = require('babyparse'),
         mime    = require('mime'),
         Promise	= require('bluebird');
 
+/**
+ * Represents a simple CSV parser with actions:
+ * @function canParseFile( <string> ) - checks if file is supported
+ * @function parse( <string> | <Buffer> | <integer>  ) - returns the array of objects (JSON)
+ * @function getPromiseFromCSVFile( <string> | <Buffer> | <integer> ) - reads the file and returns a parse results object
+ */
 
 function canParseFile(file) {
     return (path.extname(file) === '.csv') || (mime.lookup(file) === 'text/csv');
