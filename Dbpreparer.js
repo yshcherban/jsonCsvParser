@@ -10,9 +10,7 @@ function isJson(jsonObj) {
 }
 
 function getPreparedData ( arrJsonObj ) {
-    let data = [];
     let preparedData = [];
-    const unpreparedData = [];
     const required = ["firstName", "lastName", "gender"]; //"firstName", "lastName", "gender"
 
     for (let i = 0; i < arrJsonObj.length; i++) {
@@ -117,11 +115,11 @@ function getPreparedData ( arrJsonObj ) {
 
         });
 
-        data.push(promiseResponse);
+        preparedData.push(promiseResponse);
     }
 
 
-    return Promise.all(data);
+    return Promise.all(preparedData);
 }
 
 
