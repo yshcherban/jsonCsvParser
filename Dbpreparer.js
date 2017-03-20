@@ -9,7 +9,6 @@ function isJson(jsonObj) {
     return true;
 }
 
-
 /** possible values for well-known params */
 const guessTable = {
     firstName:	['name', 'firstname'],
@@ -95,7 +94,7 @@ function getPreparedData(arrJsonObj) {
         const guessedHeaders = guessHeaders(Object.keys(arrJsonObj[i]));
         res.push(generalizeData([arrJsonObj[i]], guessedHeaders)[0]);
     }
-    
+
     return res;
 }
 
