@@ -2,11 +2,11 @@
 
 const   chai = require('chai'),
         should = chai.should(),
-        jsonParser = require('../../Jsonparser');
+        jsonParser = require('../Jsonparser');
 
 describe('JSONparser', () => {
     it('should consist the same pair-values', (done) => {
-        jsonParser.parse('stud.json').then((res) => {
+        jsonParser.parse('test/data/stud.json').then((res) => {
             res.should.deep.equal([{
                     "lastname": "Shcherban",
                     "gender": "boy",
@@ -42,13 +42,13 @@ describe('JSONparser', () => {
     });
 
     it('should return error as "SyntaxError: Unexpected token (x) in JSON at position (n)" for wrong file type', (done) => {
-        jsonParser.parse('students.xml').catch( e => {
+        jsonParser.parse('test/data/students.xml').catch( e => {
             done();
         });
     });
 
     it('should return error as "SyntaxError: Unexpected token (x) in JSON at position (n)" for broken file', (done) => {
-        jsonParser.parse('stud-broken.json').catch( e => {
+        jsonParser.parse('test/data/stud-broken.json').catch( e => {
             done();
         });
     });
