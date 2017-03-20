@@ -2,7 +2,6 @@
 
 const   chai = require('chai'),
         should = chai.should(),
-        expect = chai.expect,
         dbPreparer = require('../Dbpreparer');
 
 describe('dbPreparer', () => {
@@ -58,5 +57,11 @@ describe('dbPreparer', () => {
         }]).should.to.be.an('array');
         done();
     });
+
+    it('should return an empty array for wrong data type', (done) => {
+        dbPreparer.getPreparedData(2).should.be.empty;
+        done();
+    });
+
 
 });
