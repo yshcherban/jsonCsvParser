@@ -4,10 +4,8 @@ const xlsxParser = require('./Xlsxparser');
 const dbpreparer = require('./Dbpreparer');
 
 
-jsonParser.parse('stud.json').then(res => {
-    dbpreparer.getPreparedData(res).then(res => {
-        console.log(res);
-    });
+jsonParser.parse('./test/data/stud.json').then(res => {
+    console.log(dbpreparer.getPreparedData(res))
 });
 
 // csvParser.parse('students-broken.csv').then(res => {

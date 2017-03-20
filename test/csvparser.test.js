@@ -2,11 +2,11 @@
 
 const   chai = require('chai'),
         should = chai.should(),
-        csvParser = require('../../Csvparser');
+        csvParser = require('../Csvparser');
 
 describe('CSVparser', () => {
     it('should consist the same pair-values"', (done) => {
-        csvParser.parse('students.csv').then( (res) => {
+        csvParser.parse('test/data/students.csv').then( (res) => {
             res.should.deep.equal([{
                 "firstname": "Yaroslav",
                 "lastname": "Shcherban",
@@ -28,13 +28,13 @@ describe('CSVparser', () => {
     });
 
     it('should return error as "Error: Unsupported file type." for wrong file type', (done) => {
-        csvParser.parse('students.xml').catch( e => {
+        csvParser.parse('test/data/students.xml').catch( e => {
             done();
         });
     });
 
     it('should return error as "Error: Unable to auto-detect delimiting character, defaulted to (,)" for broken file', (done) => {
-        csvParser.parse('students-broken.csv').catch( e => {
+        csvParser.parse('test/data/students-broken.csv').catch( e => {
             done();
         });
     });
