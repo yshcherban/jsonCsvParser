@@ -10,9 +10,10 @@ function isJson(jsonObj) {
 }
 
 function getPreparedData ( arrJsonObj ) {
+    let data = [];
     let preparedData = [];
-    let unpreparedData = [];
-    const required = ["firstName", "lastName", "gender"];
+    const unpreparedData = [];
+    const required = ["firstName", "lastName", "gender"]; //"firstName", "lastName", "gender"
 
     for (let i = 0; i < arrJsonObj.length; i++) {
 
@@ -106,6 +107,8 @@ function getPreparedData ( arrJsonObj ) {
 
                 if (required.length === foundReqHeaders) {
                    return prepObj;
+                } else {
+                    return { unpreparedData: prepObj }
                 }
 
             } else {
@@ -114,12 +117,14 @@ function getPreparedData ( arrJsonObj ) {
 
         });
 
-
-        preparedData.push(promiseResponse);
+        data.push(promiseResponse);
     }
 
-    return Promise.all(preparedData);
+
+    return Promise.all(data);
 }
+
+
 
 
 module.exports.isJson = isJson;
