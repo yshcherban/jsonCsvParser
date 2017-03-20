@@ -81,11 +81,22 @@ const objectToStudent = function(headers, obj) {
 /**
  * Casts the data to common structure before save it to DB
  */
-function getPreparedData (data, headers) {
+function generalizeData (data, headers) {
     const studentArray = data.filter( item => Object.keys(item).length > 1 )	// removing empty objects
         .map( item => objectToStudent(headers, item));
 
     return studentArray;
+}
+
+function getPreparedData(arrJsonObj) {
+    const res = [];
+
+    for (let i = 0; i < arrJsonObj.length; i++) {
+        const guessedHeaders = guessHeaders(Object.keys(arrJsonObj[i]));
+        res.push(generalizeData([arrJsonObj[i]], guessedHeaders)[0]);
+    }
+    
+    return res;
 }
 
 
