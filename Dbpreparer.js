@@ -1,4 +1,4 @@
-const   Promise	= require('bluebird');
+const handleError = require('./ParserError');
 
 function isJson(jsonObj) {
     try {
@@ -26,6 +26,8 @@ const guessTable = {
  * @return {String|undefined} actual name for `fieldToGuess`
  */
 const guessColumn = function(fieldNames, fieldToGuess) {
+    if (typeof fieldNames !== 'string' && typeof fieldNames !== 'object') return handleError("arguments are not string or object");
+
     const possibleValues = guessTable[fieldToGuess];
     if(!Array.isArray(possibleValues)) return undefined;	// there is no such value in table
 
@@ -41,6 +43,9 @@ const guessColumn = function(fieldNames, fieldToGuess) {
  * @return {{firstName: (String|undefined), lastName: (String|undefined), gender: (String|undefined), birthday: (String|undefined), form: (String|undefined), house: (String|undefined)}}
  */
 const guessHeaders = function(fieldNamesArray) {
+
+    if(!(fieldNamesArray instanceof Array)) return handleError("should be an Array, " + typeof fieldNamesArray + " given");
+
     return {
         firstName:	guessColumn(fieldNamesArray, 'firstName'),
         lastName:	guessColumn(fieldNamesArray, 'lastName'),
@@ -91,13 +96,15 @@ function getPreparedData(arrJsonObj) {
     const res = [];
 
     for (let i = 0; i < arrJsonObj.length; i++) {
-        const guessedHeaders = guessHeaders(Object.keys(arrJsonObj[i]));
+        //const guessedHeaders = guessHeaders(112); //Object.keys(arrJsonObj[i])
         res.push(generalizeData([arrJsonObj[i]], guessedHeaders)[0]);
     }
 
     return res;
 }
 
+
+console.log(guessColumn(1,3));
 
 
 

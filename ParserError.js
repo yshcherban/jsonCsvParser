@@ -1,21 +1,29 @@
-function ParserError(err) {
-    this.message = err.message;
-    this.name = 'Parser Error';
-    this.type = err.type;
-    Error.captureStackTrace(this, ParserError);
-}
-ParserError.prototype = Object.create(Error.prototype);
-ParserError.prototype.constructor = ParserError;
+function customErrorHandler (msg) {
+    let err = new Error;
 
-function getTypeOfError(err) {
-    switch(true) {
-        case (err instanceof SyntaxError):
-            return new ParserError({
-                message: err.message,
-                type: 'SyntaxError'
-            });
-        break;
-    }
+    /** format stack trace */
+    Error.prepareStackTrace = ((err, stack) => {
+        return stack;
+    });
+
+    /** Creates a stack property */
+    Error.captureStackTrace(err, customErrorHandler);
+    const stack = err.stack[0];
+
+    err.stack.forEach(function (frame) {
+        console.error(' at: %s:%d - %s'
+            , frame.getFileName()
+            , frame.getLineNumber()
+            , frame.getFunctionName());
+    });
+
+    return {
+        "error" : msg,
+        "file" : stack.getFileName(),
+        "line": stack.getLineNumber(),
+        "called": stack.getFunctionName()
+    };
+
 }
 
-module.exports = getTypeOfError;
+module.exports = customErrorHandler;
