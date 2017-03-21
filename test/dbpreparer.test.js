@@ -61,6 +61,7 @@ describe('dbPreparer', () => {
     it('should return error as "should be an Array, {x} given" for wrong data type', (done) => {
         dbPreparer.getPreparedData(2).should.have.property('error');
         dbPreparer.getPreparedData(2).error.should.have.length.above(0);
+        dbPreparer.getPreparedData(2).error.should.equal('should be an Array, number given');
         done();
     });
 
