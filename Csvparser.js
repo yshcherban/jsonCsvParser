@@ -18,6 +18,8 @@ function canParseFile(file) {
 function parse(file) {
     return getPromiseFromCSVFile(file).then(result => {
         return result.data || [];
+    }).catch(e => {
+        return handleError(e.message);
     });
 }
 

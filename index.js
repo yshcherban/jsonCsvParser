@@ -4,14 +4,17 @@ const xlsxParser = require('./Xlsxparser');
 const dbpreparer = require('./Dbpreparer');
 
 
-jsonParser.parse('./test/data/stud.json').then(res => {
-    console.log(dbpreparer.getPreparedData(res))
+// jsonParser.parse('./test/data/students.csv').then(res => {
+//     console.log(res);
+//     //console.log(dbpreparer.getPreparedData(res));
+// });
+
+//console.log(dbpreparer.getPreparedData(12))
+
+// csvParser.parse('./test/data/students-broken.csv').then(res => {
+//     console.log(res);
+// });
+
+xlsxParser.parse('./test/data/stud.json').then(res => {
+    console.log(res);
 });
-
-// csvParser.parse('students-broken.csv').then(res => {
-//     console.log(res);
-// });
-
-// xlsxParser.parse('students2.xlsx').then(res => {
-//     console.log(res);
-// });

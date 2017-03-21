@@ -19,6 +19,8 @@ function canParseFile(file) {
 function parse (file) {
     return readJsonFile(file, "utf8").then( contents => {
         return JSON.parse(contents);
+    }).catch(e => {
+        return handleError(e.message);
     });
 }
 
