@@ -1,7 +1,8 @@
 const   fs      = require('fs'),
         path    = require('path'),
         mime    = require('mime'),
-        Promise	= require('bluebird');
+        Promise	= require('bluebird'),
+        handleError = require('./ErrorHandler');
 
 /**
  * Represents a simple JSON parser with actions:

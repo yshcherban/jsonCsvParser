@@ -1,7 +1,8 @@
 const   baby    = require('babyparse'),
         path    = require('path'),
         mime    = require('mime'),
-        Promise	= require('bluebird');
+        Promise	= require('bluebird'),
+        handleError = require('./ErrorHandler');
 
 /**
  * Represents a simple CSV parser with actions:

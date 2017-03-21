@@ -1,4 +1,4 @@
-const handleError = require('./ParserError');
+const handleError = require('./ErrorHandler');
 
 function isJson(jsonObj) {
     try {
