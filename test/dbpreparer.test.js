@@ -58,8 +58,9 @@ describe('dbPreparer', () => {
         done();
     });
 
-    it('should return an empty array for wrong data type', (done) => {
-        dbPreparer.getPreparedData(2).should.be.empty;
+    it('should return error as "should be an Array, {x} given" for wrong data type', (done) => {
+        dbPreparer.getPreparedData(2).should.have.property('error');
+        dbPreparer.getPreparedData(2).error.should.have.length.above(0);
         done();
     });
 

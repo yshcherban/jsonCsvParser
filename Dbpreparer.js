@@ -2,7 +2,7 @@ const handleError = require('./ParserError');
 
 function isJson(jsonObj) {
     try {
-        JSON.parse(JSON.stringify(jsonObj));
+        JSON.parse(jsonObj);
     } catch (e) {
         return false;
     }
@@ -26,7 +26,7 @@ const guessTable = {
  * @return {String|undefined} actual name for `fieldToGuess`
  */
 const guessColumn = function(fieldNames, fieldToGuess) {
-    if (typeof fieldNames !== 'string' && typeof fieldNames !== 'object') return handleError("arguments are not string or object");
+    if (typeof fieldToGuess !== 'string' && typeof fieldNames !== 'object') return handleError("arguments are not string or object");
 
     const possibleValues = guessTable[fieldToGuess];
     if(!Array.isArray(possibleValues)) return undefined;	// there is no such value in table
@@ -58,6 +58,8 @@ const guessHeaders = function(fieldNamesArray) {
 
 /** Try to guess gender value */
 const guessGender = function (genderValue) {
+    if (typeof genderValue !== 'string') return handleError("should be a string, " + typeof genderValue + " given");
+
     const lowGender = genderValue.toLowerCase();
 
     if(lowGender === 'boy' || lowGender === 'male' || lowGender === '1') 	return 'MALE';
@@ -67,6 +69,8 @@ const guessGender = function (genderValue) {
 };
 
 const objectToStudent = function(headers, obj) {
+    if (typeof headers !== 'object' && typeof obj !== 'object') return handleError("arguments should be an object");
+
     const 	firstName	= obj[headers.firstName],
             lastName	= obj[headers.lastName],
             gender		= obj[headers.gender];
@@ -86,6 +90,8 @@ const objectToStudent = function(headers, obj) {
  * Casts the data to common structure before save it to DB
  */
 function generalizeData (data, headers) {
+    if (typeof data !== 'object' && typeof headers !== 'object') return handleError("arguments should be an object");
+
     const studentArray = data.filter( item => Object.keys(item).length > 1 )	// removing empty objects
         .map( item => objectToStudent(headers, item));
 
@@ -93,20 +99,17 @@ function generalizeData (data, headers) {
 }
 
 function getPreparedData(arrJsonObj) {
-    const res = [];
+    if(!(arrJsonObj instanceof Array)) return handleError("should be an Array, " + typeof arrJsonObj + " given");
 
-    for (let i = 0; i < arrJsonObj.length; i++) {
-        //const guessedHeaders = guessHeaders(112); //Object.keys(arrJsonObj[i])
-        res.push(generalizeData([arrJsonObj[i]], guessedHeaders)[0]);
-    }
+    let preparedData = [];
 
-    return res;
+    arrJsonObj.forEach( arrJSONobj => {
+        preparedData.push(generalizeData([arrJSONobj], guessHeaders(Object.keys(arrJSONobj)))[0]);
+    });
+
+    return preparedData;
+
 }
-
-
-console.log(guessColumn(1,3));
-
-
 
 module.exports.isJson = isJson;
 module.exports.getPreparedData = getPreparedData;
