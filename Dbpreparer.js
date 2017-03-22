@@ -61,14 +61,44 @@ const guessHeaders = function(fieldNamesArray) {
     }
 };
 
+/** Set birthday date format as 12/03/68 */
+const getBdayDateFormat = function (date) {
+    assert(!(/^[a-zA-Z]+$/.test(date)), 'date is an incorrect');
+
+    const expectedDigitDate = date.match(/[0-9]+/g); /** digits from string */
+    const month = date.match(/[a-zA-Z]+/g); /** character from string */
+
+    /** day as integer */
+    const getDay = expectedDigitDate[0] = parseInt(expectedDigitDate[0]);
+    /** set year to 2 digits */
+    const getYear = expectedDigitDate[expectedDigitDate.length - 1];
+    expectedDigitDate[expectedDigitDate.length - 1] = new Date(Date.parse("09 22, " + getYear)).getFullYear().toString().substr(2,2);
+
+    let outputDateFormat;
+
+    if (month) {
+        /** if month is a string */
+        let getMonth = month.join();
+        /** num of month */
+        const getNumMonth = new Date(Date.parse(getMonth+" 22, 2017")).getMonth() + 1;
+        /** insert month into array before year */
+        expectedDigitDate.splice(expectedDigitDate.length -1, 0, getNumMonth);
+        outputDateFormat = expectedDigitDate.join('/'); /** defined format */
+        return outputDateFormat;
+    } else {
+        outputDateFormat = expectedDigitDate.join('/'); /** defined format */
+        return outputDateFormat;
+    }
+}
+
 /** Try to guess gender value */
 const guessGender = function (genderValue) {
     assert(typeof genderValue === 'string', 'genderValue is not a string');
 
     const lowGender = genderValue.toLowerCase();
 
-    if(lowGender === 'boy' || lowGender === 'male' || lowGender === '1') 	return 'MALE';
-    if(lowGender === 'girl' || lowGender === 'female' || lowGender === '0') return 'FEMALE';
+    if(lowGender === 'boy' || lowGender === 'male' || lowGender.toUpperCase() === 'M' || lowGender === 'm' || lowGender === '1' ) return 'MALE';
+    if(lowGender === 'girl' || lowGender === 'female' || lowGender.toUpperCase() === 'F' || lowGender === 'f' || lowGender === '0') return 'FEMALE';
 
     return genderValue;
 };
@@ -78,15 +108,16 @@ const objectToStudent = function(headers, obj) {
     assert(typeof obj === 'object', 'obj is not an object');
 
     const 	firstName	= obj[headers.firstName],
-        lastName	= obj[headers.lastName],
-        gender		= obj[headers.gender];
+            lastName	= obj[headers.lastName],
+            gender		= obj[headers.gender],
+            birthday    = obj[headers.birthday];
 
     return {
         firstName:	firstName ? firstName.trim() : undefined,
         lastName:	lastName ? lastName.trim() : undefined,
         gender: 	gender ? guessGender(gender) : undefined,
 
-        birthday:	obj[headers.birthday],
+        birthday:	birthday ? getBdayDateFormat(birthday) : undefined,
         form:		obj[headers.form],
         house: 		obj[headers.house]
     };
