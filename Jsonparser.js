@@ -1,8 +1,7 @@
 const   fs      = require('fs'),
         path    = require('path'),
         mime    = require('mime'),
-        Promise	= require('bluebird'),
-        parserError = require('./ParserErrorHandler');
+        Promise	= require('bluebird');
 
 /**
  * Represents a simple JSON parser with actions:
@@ -20,7 +19,7 @@ function parse (file) {
     return readJsonFile(file, "utf8").then( contents => {
         return JSON.parse(contents);
     }).catch(e => {
-        throw new parserError(e.message);
+        throw new Error(e.message);
     });
 }
 

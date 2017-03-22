@@ -59,11 +59,6 @@ describe('dbPreparer', () => {
         }]).should.to.be.an('array');
         done();
     });
-
-    it('should return error as "should be an Array, {x} given" for wrong data type', (done) => {
-        //dbPreparer.getPreparedData(2).should.equal('should be an Array, number given');
-        done();
-    });
-
+    
 
 });
