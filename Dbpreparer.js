@@ -1,4 +1,4 @@
-const handleError = require('./ErrorHandler');
+const parserError = require('./ParserErrorHandler');
 
 function isJson(jsonObj) {
     try {
@@ -26,7 +26,7 @@ const guessTable = {
  * @return {String|undefined} actual name for `fieldToGuess`
  */
 const guessColumn = function(fieldNames, fieldToGuess) {
-    if (typeof fieldToGuess !== 'string' && typeof fieldNames !== 'object') return handleError("arguments are not string or object");
+    if (typeof fieldToGuess !== 'string' && typeof fieldNames !== 'object') throw new parserError("arguments are not string or object");
 
     const possibleValues = guessTable[fieldToGuess];
     if(!Array.isArray(possibleValues)) return undefined;	// there is no such value in table
@@ -44,7 +44,7 @@ const guessColumn = function(fieldNames, fieldToGuess) {
  */
 const guessHeaders = function(fieldNamesArray) {
 
-    if(!(fieldNamesArray instanceof Array)) return handleError("should be an Array, " + typeof fieldNamesArray + " given");
+    if(!(fieldNamesArray instanceof Array)) throw new parserError("should be an Array, " + typeof fieldNamesArray + " given");
 
     return {
         firstName:	guessColumn(fieldNamesArray, 'firstName'),
@@ -58,7 +58,7 @@ const guessHeaders = function(fieldNamesArray) {
 
 /** Try to guess gender value */
 const guessGender = function (genderValue) {
-    if (typeof genderValue !== 'string') return handleError("should be a string, " + typeof genderValue + " given");
+    if (typeof genderValue !== 'string') throw new parserError("should be a string, " + typeof genderValue + " given");
 
     const lowGender = genderValue.toLowerCase();
 
@@ -69,7 +69,7 @@ const guessGender = function (genderValue) {
 };
 
 const objectToStudent = function(headers, obj) {
-    if (typeof headers !== 'object' && typeof obj !== 'object') return handleError("arguments should be an object");
+    if (typeof headers !== 'object' && typeof obj !== 'object') throw new parserError("arguments should be an object");
 
     const 	firstName	= obj[headers.firstName],
             lastName	= obj[headers.lastName],
@@ -90,7 +90,7 @@ const objectToStudent = function(headers, obj) {
  * Casts the data to common structure before save it to DB
  */
 function generalizeData (data, headers) {
-    if (typeof data !== 'object' && typeof headers !== 'object') return handleError("arguments should be an object");
+    if (typeof data !== 'object' && typeof headers !== 'object') throw new parserError("arguments should be an object");
 
     const studentArray = data.filter( item => Object.keys(item).length > 1 )	// removing empty objects
         .map( item => objectToStudent(headers, item));
@@ -99,7 +99,7 @@ function generalizeData (data, headers) {
 }
 
 function getPreparedData(arrJsonObj) {
-    if(!(arrJsonObj instanceof Array)) return handleError("should be an Array, " + typeof arrJsonObj + " given");
+    if(!(arrJsonObj instanceof Array)) throw new parserError("should be an Array, " + typeof arrJsonObj + " given");
 
     let preparedData = [];
 

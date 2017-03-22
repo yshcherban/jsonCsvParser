@@ -2,7 +2,7 @@ const   path    = require('path'),
         mime    = require('mime'),
         XLSX    = require('xlsx'),
         Promise	= require('bluebird'),
-        handleError = require('./ErrorHandler');
+        parserError = require('./ParserErrorHandler');
 
 /**
  * Represents a simple XLSX parser with actions:
@@ -20,7 +20,7 @@ function parse(file) {
     return readXlsxFile(file).then(readFile => {
         return XLSX.utils.sheet_to_json(readFile.Sheets[readFile.SheetNames[0]]) || [];
     }).catch(e => {
-        return handleError(e.message);
+        throw new parserError(e.message);
     });
 }
 

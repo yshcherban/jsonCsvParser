@@ -4,10 +4,11 @@ const xlsxParser = require('./Xlsxparser');
 const dbpreparer = require('./Dbpreparer');
 
 
-// jsonParser.parse('./test/data/students.csv').then(res => {
-//     console.log(res);
-//     //console.log(dbpreparer.getPreparedData(res));
-// });
+jsonParser.parse('./test/data/stud.json').then(res => {
+    console.log(dbpreparer.getPreparedData(2));
+}).catch(e => {
+    console.log(e);
+});
 
 //console.log(dbpreparer.getPreparedData(12))
 
@@ -15,6 +16,6 @@ const dbpreparer = require('./Dbpreparer');
 //     console.log(res);
 // });
 
-xlsxParser.parse('./test/data/stud.json').then(res => {
-    console.log(res);
-});
+// xlsxParser.parse('./test/data/stud.json').then(res => {
+//     console.log(res);
+// });

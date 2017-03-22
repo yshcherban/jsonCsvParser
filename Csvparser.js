@@ -2,7 +2,7 @@ const   baby    = require('babyparse'),
         path    = require('path'),
         mime    = require('mime'),
         Promise	= require('bluebird'),
-        handleError = require('./ErrorHandler');
+        parserError = require('./ParserErrorHandler');
 
 /**
  * Represents a simple CSV parser with actions:
@@ -19,7 +19,7 @@ function parse(file) {
     return getPromiseFromCSVFile(file).then(result => {
         return result.data || [];
     }).catch(e => {
-        return handleError(e.message);
+        throw new parserError(e.message);
     });
 }
 
