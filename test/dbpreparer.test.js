@@ -59,6 +59,6 @@ describe('dbPreparer', () => {
         }]).should.to.be.an('array');
         done();
     });
-    
+
 
 });

@@ -9,6 +9,10 @@ function isJson(jsonObj) {
     return true;
 }
 
+const requiredFields = ["firstName", "lastName", "gender", "birthday"]; //"firstName", "lastName", "gender", "birthday"
+const prepData = [];
+const unpreparedData = [];
+
 /** possible values for well-known params */
 const guessTable = {
     firstName:	['name', 'firstname'],
@@ -26,8 +30,8 @@ const guessTable = {
  * @return {String|undefined} actual name for `fieldToGuess`
  */
 const guessColumn = function(fieldNames, fieldToGuess) {
-    assert(typeof fieldToGuess !== 'string', 'fieldToGuess is not a string');
-    assert(typeof fieldNames !== 'object', 'fieldNames is not an object');
+    assert(typeof fieldToGuess === 'string', 'fieldToGuess is not a string');
+    assert(typeof fieldNames === 'object', 'fieldNames is not an object');
 
     const possibleValues = guessTable[fieldToGuess];
     if(!Array.isArray(possibleValues)) return undefined;	// there is no such value in table
@@ -44,6 +48,7 @@ const guessColumn = function(fieldNames, fieldToGuess) {
  * @return {{firstName: (String|undefined), lastName: (String|undefined), gender: (String|undefined), birthday: (String|undefined), form: (String|undefined), house: (String|undefined)}}
  */
 const guessHeaders = function(fieldNamesArray) {
+
     assert(Array.isArray(fieldNamesArray), 'fieldNames is not an array');
 
     return {
@@ -58,7 +63,7 @@ const guessHeaders = function(fieldNamesArray) {
 
 /** Try to guess gender value */
 const guessGender = function (genderValue) {
-    assert(typeof genderValue !== 'string', 'genderValue is not a string');
+    assert(typeof genderValue === 'string', 'genderValue is not a string');
 
     const lowGender = genderValue.toLowerCase();
 
@@ -69,14 +74,12 @@ const guessGender = function (genderValue) {
 };
 
 const objectToStudent = function(headers, obj) {
-    assert(typeof headers !== 'object', 'headers is not an object');
-    assert(typeof obj !== 'object', 'obj is not an object');
-
-    if (typeof headers !== 'object' && typeof obj !== 'object') throw new parserError("arguments should be an object");
+    assert(typeof headers === 'object', 'headers is not an object');
+    assert(typeof obj === 'object', 'obj is not an object');
 
     const 	firstName	= obj[headers.firstName],
-            lastName	= obj[headers.lastName],
-            gender		= obj[headers.gender];
+        lastName	= obj[headers.lastName],
+        gender		= obj[headers.gender];
 
     return {
         firstName:	firstName ? firstName.trim() : undefined,
@@ -93,8 +96,8 @@ const objectToStudent = function(headers, obj) {
  * Casts the data to common structure before save it to DB
  */
 function generalizeData (data, headers) {
-    assert(typeof data !== 'object', 'data is not an object');
-    assert(typeof headers !== 'object', 'headers is not an object');
+    assert(typeof data === 'object', 'data is not an object');
+    assert(typeof headers === 'object', 'headers is not an object');
 
     const studentArray = data.filter( item => Object.keys(item).length > 1 )	// removing empty objects
         .map( item => objectToStudent(headers, item));
@@ -102,6 +105,41 @@ function generalizeData (data, headers) {
     return studentArray;
 }
 
+function checkIfRequiredFieldsExist(arrJsonObj) {
+
+    if (requiredFields.length > 0) {
+
+        arrJsonObj.forEach( jsonObj => {
+
+            const foundReqHeaders = [];
+
+            requiredFields.forEach( (field) => {
+                if ((Object.keys(jsonObj).indexOf(field)) !== -1) {
+                    if(jsonObj[field] !== undefined) {
+                        foundReqHeaders.push(1);
+                    }
+                }
+            });
+
+            if (requiredFields.length === foundReqHeaders.length) {
+                prepData.push(jsonObj);
+            } else {
+                unpreparedData.push(jsonObj);
+            }
+
+        });
+    } else {
+        arrJsonObj.forEach(jsonObj => {
+            prepData.push(jsonObj);
+        })
+    }
+}
+
+/**
+ * Gets data before save it to db
+ * @param arrJsonObj
+ * @returns {{success: Array, failed: Array}}
+ */
 function getPreparedData(arrJsonObj) {
     assert(Array.isArray(arrJsonObj), 'arrJsonObj is not an array');
 
@@ -111,7 +149,12 @@ function getPreparedData(arrJsonObj) {
         preparedData.push(generalizeData([arrJSONobj], guessHeaders(Object.keys(arrJSONobj)))[0]);
     });
 
-    return preparedData;
+    checkIfRequiredFieldsExist(preparedData);
+
+    return {
+        "success": prepData,
+        "failed": unpreparedData
+    };
 
 }
 

@@ -5,7 +5,7 @@ const dbpreparer = require('./Dbpreparer');
 
 
 jsonParser.parse('./test/data/stud.json').then(res => {
-    console.log(dbpreparer.getPreparedData(2));
+    console.log(dbpreparer.getPreparedData(res));
 }).catch(e => {
     console.log(e);
 });

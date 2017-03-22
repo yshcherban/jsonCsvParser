@@ -12,7 +12,8 @@
 	{
 		"firstName": "Luiza",
 		"lastName": "Smith",
-		"gender": "girl"
+		"gender": "girl",
+		"birthday": "tes"
 	},
 	{
 		"firstName": "Ivan",
