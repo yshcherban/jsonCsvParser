@@ -1,4 +1,4 @@
-const assert = require('assert');
+const   assert = require('assert');
 
 function isJson(jsonObj) {
     try {
@@ -9,8 +9,11 @@ function isJson(jsonObj) {
     return true;
 }
 
-const requiredFields = ["firstName", "lastName", "gender", "birthday"]; //"firstName", "lastName", "gender", "birthday"
+/** required fields "firstName", "lastName", "gender", "birthday" */
+const requiredFields = ["firstName", "lastName", "gender", "birthday"];
+/** successfully saved data */
 const prepData = [];
+/** failed saved data */
 const unpreparedData = [];
 
 /** possible values for well-known params */
@@ -136,6 +139,7 @@ function generalizeData (data, headers) {
     return studentArray;
 }
 
+/** checks for any required fields exist in JSON */
 function checkIfRequiredFieldsExist(arrJsonObj) {
 
     if (requiredFields.length > 0) {
@@ -190,4 +194,9 @@ function getPreparedData(arrJsonObj) {
 }
 
 module.exports.isJson = isJson;
+module.exports.guessColumn = guessColumn;
 module.exports.getPreparedData = getPreparedData;
+module.exports.guessHeaders = guessHeaders;
+module.exports.getBdayDateFormat = getBdayDateFormat;
+module.exports.guessGender = guessGender;
+module.exports.objectToStudent = objectToStudent;
