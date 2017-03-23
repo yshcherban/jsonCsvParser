@@ -5,7 +5,11 @@ const dbpreparer = require('./Dbpreparer');
 
 
 jsonParser.parse('./test/data/stud.json').then(res => {
-    console.log(dbpreparer.getPreparedData(res));
+    console.log(dbpreparer.getPreparedData([
+        {
+            "asdada": "adadad"
+        }
+    ]));
 }).catch(e => {
     console.log(e);
 });

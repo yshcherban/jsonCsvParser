@@ -1,32 +1,39 @@
 [
 	{
+		"firstName": "Yaroslav",
 		"lastname": "Shcherban",
 		"gender": "boy",
-		"firstName": "Yaroslav"
+		"bday": "09.10.1900"
+
 	},
 	{
 		"firstname": "Slava",
 		"lastname": "Kondratuk",
-		"gender": "0"
+		"gender": "0",
+		"bday": "02.07.1995"
 	},
 	{
 		"firstName": "Luiza",
 		"lastName": "Smith",
-		"gender": "girl"
+		"gender": "girl",
+		"bday": "12.03.1997"
 	},
 	{
 		"firstName": "Ivan",
 		"lastName": "Onoprienko",
-		"gender": "1"
+		"gender": "1",
+		"bday": "02.07.1995"
 	},
 	{
 		"firstName": "Oksana",
 		"lastName": "Sen",
-		"gender": "0"
+		"gender": "F",
+		"dob": "02.07.1995"
 	},
 	{
 		"firstName": "Alexey",
 		"lastName": "Ivanov",
-		"gender": "boy"
+		"gender": "M",
+		"dob": "14.12.1998"
 	}
 ]

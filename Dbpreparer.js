@@ -104,7 +104,7 @@ function generalizeData (data, headers) {
     assert(typeof data === 'object', 'data is not an object');
     assert(typeof headers === 'object', 'headers is not an object');
 
-    const studentArray = data.filter( item => Object.keys(item).length > 1 )	// removing empty objects
+    const studentArray = data.filter( item => Object.keys(item).length > 0 )	// removing empty objects
         .map( item => objectToStudent(headers, item));
 
     return studentArray;
@@ -146,6 +146,7 @@ function prepareData (arrJsonObj) {
 
 /** Forms guessed structure */
 function getGuessedData(arrJsonObj) {
+
     let preparedData = [];
 
     arrJsonObj.forEach( arrJSONobj => {
@@ -153,6 +154,7 @@ function getGuessedData(arrJsonObj) {
     });
 
     return preparedData;
+
 }
 
 /** Gets data before save it to db */
