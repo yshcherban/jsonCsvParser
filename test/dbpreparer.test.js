@@ -167,18 +167,19 @@ describe('dbPreparer', () => {
     it('should return a prepared json with mismatched headers as value of "failed" key', (done) => {
         dbPreparer.getPreparedData([
             {
-                "example": "value"
+                "example": "value",
+                "example2": "value"
             }
-            ])["failed"].should.deep.equal([
+        ])["failed"].should.deep.include.members([
             {
-                "firstName": undefined,
-                "lastName": undefined,
-                "gender": undefined,
                 "birthday": undefined,
+                "firstName": undefined,
                 "form": undefined,
-                "house": undefined
-            }]);
+                "gender": undefined,
+                "house": undefined,
+                "lastName": undefined
+            }
+        ]);
         done();
-    });
-
+    })
 });

@@ -61,7 +61,7 @@ const getBdayDateFormat = function (date) {
     const formatDate = moment(date, ["DD.MM.YYYY", "DD.MM.YY", "DD.M.YY", "YYYY-MM-DD", "DD MMM YYYY"]).format("D/MM/YY");
     assert(formatDate, 'date is an incorrect');
 
-    return formatDate;
+    return formatDate !== 'Invalid date' ? formatDate: undefined;
 };
 
 /** Try to guess gender value */
