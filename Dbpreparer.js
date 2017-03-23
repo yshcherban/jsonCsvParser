@@ -1,13 +1,5 @@
-const   assert = require('assert');
-
-function isJson(jsonObj) {
-    try {
-        JSON.parse(jsonObj);
-    } catch (e) {
-        return false;
-    }
-    return true;
-}
+const   assert = require('assert'),
+        moment = require('moment');
 
 /** required fields "firstName", "lastName", "gender", "birthday" */
 const requiredFields = ["firstName", "lastName", "gender", "birthday"];
@@ -64,35 +56,13 @@ const guessHeaders = function(fieldNamesArray) {
     }
 };
 
-/** Set birthday date format as 12/03/68 */
+/** Set date format as 12/03/68 */
 const getBdayDateFormat = function (date) {
-    assert(!(/^[a-zA-Z]+$/.test(date)), 'date is an incorrect');
+    const formatDate = moment(date, ["DD.MM.YYYY", "DD.MM.YY", "DD.M.YY", "YYYY-MM-DD", "DD MMM YYYY"]).format("D/MM/YY");
+    assert(formatDate, 'date is an incorrect');
 
-    const expectedDigitDate = date.match(/[0-9]+/g); /** digits from string */
-    const month = date.match(/[a-zA-Z]+/g); /** character from string */
-
-    /** day as integer */
-    const getDay = expectedDigitDate[0] = parseInt(expectedDigitDate[0]);
-    /** set year to 2 digits */
-    const getYear = expectedDigitDate[expectedDigitDate.length - 1];
-    expectedDigitDate[expectedDigitDate.length - 1] = new Date(Date.parse("09 22, " + getYear)).getFullYear().toString().substr(2,2);
-
-    let outputDateFormat;
-
-    if (month) {
-        /** if month is a string */
-        let getMonth = month.join();
-        /** num of month */
-        const getNumMonth = new Date(Date.parse(getMonth+" 22, 2017")).getMonth() + 1;
-        /** insert month into array before year */
-        expectedDigitDate.splice(expectedDigitDate.length -1, 0, getNumMonth);
-        outputDateFormat = expectedDigitDate.join('/'); /** defined format */
-        return outputDateFormat;
-    } else {
-        outputDateFormat = expectedDigitDate.join('/'); /** defined format */
-        return outputDateFormat;
-    }
-}
+    return formatDate;
+};
 
 /** Try to guess gender value */
 const guessGender = function (genderValue) {
@@ -100,12 +70,13 @@ const guessGender = function (genderValue) {
 
     const lowGender = genderValue.toLowerCase();
 
-    if(lowGender === 'boy' || lowGender === 'male' || lowGender.toUpperCase() === 'M' || lowGender === 'm' || lowGender === '1' ) return 'MALE';
-    if(lowGender === 'girl' || lowGender === 'female' || lowGender.toUpperCase() === 'F' || lowGender === 'f' || lowGender === '0') return 'FEMALE';
+    if(lowGender === 'boy' || lowGender === 'male' || lowGender === 'm' || lowGender === '1' ) return 'MALE';
+    if(lowGender === 'girl' || lowGender === 'female' || lowGender === 'f' || lowGender === '0') return 'FEMALE';
 
     return genderValue;
 };
 
+/** Set output structure */
 const objectToStudent = function(headers, obj) {
     assert(typeof headers === 'object', 'headers is not an object');
     assert(typeof obj === 'object', 'obj is not an object');
@@ -140,51 +111,31 @@ function generalizeData (data, headers) {
 }
 
 /** checks for any required fields exist in JSON */
-function checkIfRequiredFieldsExist(arrJsonObj) {
+function checkIfRequiredFieldsExist(JSONobj) {
+    const foundReqHeaders = [];
 
-    if (requiredFields.length > 0) {
-
-        arrJsonObj.forEach( jsonObj => {
-
-            const foundReqHeaders = [];
-
-            requiredFields.forEach( (field) => {
-                if ((Object.keys(jsonObj).indexOf(field)) !== -1) {
-                    if(jsonObj[field] !== undefined) {
-                        foundReqHeaders.push(1);
-                    }
-                }
-            });
-
-            if (requiredFields.length === foundReqHeaders.length) {
-                prepData.push(jsonObj);
-            } else {
-                unpreparedData.push(jsonObj);
+    requiredFields.forEach( (field) => {
+        if ((Object.keys(JSONobj).indexOf(field)) !== -1) {
+            if(JSONobj[field] !== undefined) {
+                foundReqHeaders.push(1);
             }
-
-        });
-    } else {
-        arrJsonObj.forEach(jsonObj => {
-            prepData.push(jsonObj);
-        })
-    }
-}
-
-/**
- * Gets data before save it to db
- * @param arrJsonObj
- * @returns {{success: Array, failed: Array}}
- */
-function getPreparedData(arrJsonObj) {
-    assert(Array.isArray(arrJsonObj), 'arrJsonObj is not an array');
-
-    let preparedData = [];
-
-    arrJsonObj.forEach( arrJSONobj => {
-        preparedData.push(generalizeData([arrJSONobj], guessHeaders(Object.keys(arrJSONobj)))[0]);
+        }
     });
 
-    checkIfRequiredFieldsExist(preparedData);
+    return requiredFields.length === foundReqHeaders.length;
+}
+
+/** prepares data for output */
+function prepareData (arrJsonObj) {
+    const guessedData = getGuessedData(arrJsonObj);
+
+    guessedData.forEach( jsonObj => {
+        if(checkIfRequiredFieldsExist(jsonObj)) {
+            prepData.push(jsonObj);
+        } else {
+            unpreparedData.push(jsonObj);
+        }
+    });
 
     return {
         "success": prepData,
@@ -193,10 +144,23 @@ function getPreparedData(arrJsonObj) {
 
 }
 
-module.exports.isJson = isJson;
-module.exports.guessColumn = guessColumn;
+/** Forms guessed structure */
+function getGuessedData(arrJsonObj) {
+    let preparedData = [];
+
+    arrJsonObj.forEach( arrJSONobj => {
+        preparedData.push(generalizeData([arrJSONobj], guessHeaders(Object.keys(arrJSONobj)))[0]);
+    });
+
+    return preparedData;
+}
+
+/** Gets data before save it to db */
+function getPreparedData(arrJsonObj) {
+    assert(Array.isArray(arrJsonObj), 'arrJsonObj is not an array');
+
+    return prepareData(arrJsonObj);
+}
+
+
 module.exports.getPreparedData = getPreparedData;
-module.exports.guessHeaders = guessHeaders;
-module.exports.getBdayDateFormat = getBdayDateFormat;
-module.exports.guessGender = guessGender;
-module.exports.objectToStudent = objectToStudent;
