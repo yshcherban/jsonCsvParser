@@ -60,4 +60,14 @@ describe('dateParser', () => {
         done();
     });
 
+    it('should return correct Full Year of two digit year', (done) => {
+        dateParser('05.10.55').getFullYear().should.equal(1955);
+        done();
+    });
+
+    it('should return Full Year as "2054" of two digit year 54', (done) => {
+        dateParser('05.10.54').getFullYear().should.equal(2054);
+        done();
+    });
+
 });
