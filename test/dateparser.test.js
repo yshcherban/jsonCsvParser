@@ -7,6 +7,7 @@ const   chai = require('chai'),
 
 /**
  * input string format: DD/MM/YYYY, DD/MM/YY, DD/M/YY, DD.MM.YYYY, DD.MM.YY", DD.M.YY, YYYY-MM-DD, DD MMM YYYY
+ * correct two digit year > 54, min 55 for 1955, 1954 converts to 2053
  */
 describe('dateParser', () => {
     it('should return a Date object for date as input string DD/MM/YYYY', (done) => {
