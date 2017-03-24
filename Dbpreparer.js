@@ -1,5 +1,5 @@
 const   assert = require('assert'),
-        moment = require('moment');
+        dateParser = require('./DateParser');
 
 /** required fields "firstName", "lastName", "gender", "birthday" */
 const requiredFields = ["firstName", "lastName", "gender", "birthday"];
@@ -56,14 +56,6 @@ const guessHeaders = function(fieldNamesArray) {
     }
 };
 
-/** Set date format as 12/03/68 */
-const getBdayDateFormat = function (date) {
-    const formatDate = moment(date, ["DD.MM.YYYY", "DD.MM.YY", "DD.M.YY", "YYYY-MM-DD", "DD MMM YYYY"]).format("D/MM/YY");
-    assert(formatDate, 'date is an incorrect');
-
-    return formatDate !== 'Invalid date' ? formatDate: undefined;
-};
-
 /** Try to guess gender value */
 const guessGender = function (genderValue) {
     assert(typeof genderValue === 'string', 'genderValue is not a string');
@@ -91,7 +83,7 @@ const objectToStudent = function(headers, obj) {
         lastName:	lastName ? lastName.trim() : undefined,
         gender: 	gender ? guessGender(gender) : undefined,
 
-        birthday:	birthday ? getBdayDateFormat(birthday) : undefined,
+        birthday:	birthday ? dateParser(birthday) : undefined,
         form:		obj[headers.form],
         house: 		obj[headers.house]
     };
@@ -112,17 +104,10 @@ function generalizeData (data, headers) {
 
 /** checks for any required fields exist in JSON */
 function checkIfRequiredFieldsExist(JSONobj) {
-    const foundReqHeaders = [];
-
-    requiredFields.forEach( (field) => {
-        if ((Object.keys(JSONobj).indexOf(field)) !== -1) {
-            if(JSONobj[field] !== undefined) {
-                foundReqHeaders.push(1);
-            }
-        }
+   const foundHeaders = Object.keys(JSONobj);
+   return requiredFields.every( (field) => {
+        return foundHeaders.includes(field) && JSONobj[field] !== undefined;
     });
-
-    return requiredFields.length === foundReqHeaders.length;
 }
 
 /** prepares data for output */

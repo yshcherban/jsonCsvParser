@@ -3,7 +3,8 @@
 const   chai = require('chai'),
         should = chai.should(),
         expect = chai.expect,
-        dbPreparer = require('../Dbpreparer');
+        dbPreparer = require('../Dbpreparer'),
+        dateParser = require('../DateParser');
 
 describe('dbPreparer', () => {
     it('should return a prepared json without required fields as value of "failed" key', (done) => {
@@ -56,14 +57,14 @@ describe('dbPreparer', () => {
                 "firstName": "Yaroslav",
                 "lastname": "Shcherban",
                 "gender": "boy",
-                "bday": "09.10.1991"
+                "bday": "09 October 1994"
 
             },
             {
                 "firstname": "Slava",
                 "lastname": "Kondratuk",
                 "gender": "1",
-                "bday": "02.07.1995"
+                "bday": "02.07.1955"
             },
             {
                 "firstName": "Luiza",
@@ -75,19 +76,19 @@ describe('dbPreparer', () => {
                 "firstName": "Ivan",
                 "lastName": "Onoprienko",
                 "gender": "1",
-                "bday": "02.07.1995"
+                "bday": "02-07-1995"
             },
             {
                 "firstName": "Oksana",
                 "lastName": "Sen",
                 "gender": "F",
-                "dob": "02.07.1995"
+                "dob": "02-07-1995"
             },
             {
                 "firstName": "Alexey",
                 "lastName": "Ivanov",
                 "gender": "M",
-                "dob": "14.12.1998"
+                "dob": "14/12/1998"
             }
         ])["success"].should.deep.equal([
             {
@@ -96,7 +97,7 @@ describe('dbPreparer', () => {
                 "gender": "MALE",
                 "house": undefined,
                 "form": undefined,
-                "birthday": "9/10/91"
+                "birthday": dateParser("09 October 1994")
 
             },
             {
@@ -105,7 +106,7 @@ describe('dbPreparer', () => {
                 "gender": "MALE",
                 "house": undefined,
                 "form": undefined,
-                "birthday": "2/07/95"
+                "birthday": dateParser("02.07.1955")
             },
             {
                 "firstName": "Luiza",
@@ -113,7 +114,7 @@ describe('dbPreparer', () => {
                 "gender": "FEMALE",
                 "house": undefined,
                 "form": undefined,
-                "birthday": "12/03/97"
+                "birthday": dateParser("12.03.1997")
             },
             {
                 "firstName": "Ivan",
@@ -121,7 +122,7 @@ describe('dbPreparer', () => {
                 "gender": "MALE",
                 "house": undefined,
                 "form": undefined,
-                "birthday": "2/07/95"
+                "birthday": dateParser("02-07-1995")
             },
             {
                 "firstName": "Oksana",
@@ -129,7 +130,7 @@ describe('dbPreparer', () => {
                 "gender": "FEMALE",
                 "house": undefined,
                 "form": undefined,
-                "birthday": "2/07/95"
+                "birthday": dateParser("02-07-1995")
             },
             {
                 "firstName": "Alexey",
@@ -137,7 +138,7 @@ describe('dbPreparer', () => {
                 "gender": "MALE",
                 "house": undefined,
                 "form": undefined,
-                "birthday": "14/12/98"
+                "birthday": dateParser("14/12/1998")
             }
         ]);
         done();
