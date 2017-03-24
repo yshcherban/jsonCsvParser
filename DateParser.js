@@ -2,7 +2,7 @@ const   moment = require('moment'),
         assert = require('assert');
 
 /**
- * Set date format as 12/03/68
+ * Creates Date Object for date as input string
  * @param {string} date
  * @returns {Date} recognized date
  */

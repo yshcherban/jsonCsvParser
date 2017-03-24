@@ -1,7 +1,7 @@
-const jsonParser = require('./Jsonparser');
-const csvParser = require('./Csvparser');
-const xlsxParser = require('./Xlsxparser');
-const dbpreparer = require('./Dbpreparer');
+const jsonParser = require('./JsonParser');
+const csvParser = require('./CsvParser');
+const xlsxParser = require('./XlsxParser');
+const dbpreparer = require('./DbPreparer');
 
 
 jsonParser.parse('./test/data/stud.json').then(res => {
@@ -11,7 +11,7 @@ jsonParser.parse('./test/data/stud.json').then(res => {
                 "name": "Yaroslav",
                 "lastname": "Shcherban",
                 "gender": '0',
-                "bday": "09/12/1984"
+                "bday": "10/12/1955"
             }
         ]
     ));

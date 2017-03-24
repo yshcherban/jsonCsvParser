@@ -1,5 +1,6 @@
 const   assert = require('assert'),
-        dateParser = require('./DateParser');
+        dateParser = require('./DateParser'),
+        guessGender = require('./GenderGuesser');
 
 /** required fields "firstName", "lastName", "gender", "birthday" */
 const requiredFields = ["firstName", "lastName", "gender", "birthday"];
@@ -54,18 +55,6 @@ const guessHeaders = function(fieldNamesArray) {
         form:		guessColumn(fieldNamesArray, 'form'),
         house:		guessColumn(fieldNamesArray, 'house')
     }
-};
-
-/** Try to guess gender value */
-const guessGender = function (genderValue) {
-    assert(typeof genderValue === 'string', 'genderValue is not a string');
-
-    const lowGender = genderValue.toLowerCase();
-
-    if(lowGender === 'boy' || lowGender === 'male' || lowGender === 'm' || lowGender === '1' ) return 'MALE';
-    if(lowGender === 'girl' || lowGender === 'female' || lowGender === 'f' || lowGender === '0') return 'FEMALE';
-
-    return genderValue;
 };
 
 /** Set output structure */

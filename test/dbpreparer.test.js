@@ -182,5 +182,5 @@ describe('dbPreparer', () => {
             }
         ]);
         done();
-    })
+    });
 });
