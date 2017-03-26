@@ -4,10 +4,6 @@ const   assert = require('assert'),
 
 /** required fields "firstName", "lastName", "gender", "birthday" */
 const requiredFields = ["firstName", "lastName", "gender", "birthday"];
-/** successfully saved data */
-const prepData = [];
-/** failed saved data */
-const unpreparedData = [];
 
 /** possible values for well-known params */
 const guessTable = {
@@ -25,7 +21,7 @@ const guessTable = {
  * @param {String} fieldToGuess name of column to search. This is key in guess table. Like `firstName`
  * @return {String|undefined} actual name for `fieldToGuess`
  */
-const guessColumn = function(fieldNames, fieldToGuess) {
+const guessColumn = (fieldNames, fieldToGuess) => {
     assert(typeof fieldToGuess === 'string', 'fieldToGuess is not a string');
     assert(typeof fieldNames === 'object', 'fieldNames is not an object');
 
@@ -43,7 +39,7 @@ const guessColumn = function(fieldNames, fieldToGuess) {
  * @param {Array.<String>} fieldNamesArray fieldNames array of actual name of columns
  * @return {{firstName: (String|undefined), lastName: (String|undefined), gender: (String|undefined), birthday: (String|undefined), form: (String|undefined), house: (String|undefined)}}
  */
-const guessHeaders = function(fieldNamesArray) {
+const guessHeaders = (fieldNamesArray) => {
 
     assert(Array.isArray(fieldNamesArray), 'fieldNames is not an array');
 
@@ -58,7 +54,7 @@ const guessHeaders = function(fieldNamesArray) {
 };
 
 /** Set output structure */
-const objectToStudent = function(headers, obj) {
+const objectToStudent = (headers, obj) => {
     assert(typeof headers === 'object', 'headers is not an object');
     assert(typeof obj === 'object', 'obj is not an object');
 
@@ -81,7 +77,7 @@ const objectToStudent = function(headers, obj) {
 /**
  * Casts the data to common structure before save it to DB
  */
-function generalizeData (data, headers) {
+const generalizeData = (data, headers) => {
     assert(typeof data === 'object', 'data is not an object');
     assert(typeof headers === 'object', 'headers is not an object');
 
@@ -89,19 +85,24 @@ function generalizeData (data, headers) {
         .map( item => objectToStudent(headers, item));
 
     return studentArray;
-}
+};
 
 /** checks for any required fields exist in JSON */
-function checkIfRequiredFieldsExist(JSONobj) {
+const checkIfRequiredFieldsExist = (JSONobj) => {
    const foundHeaders = Object.keys(JSONobj);
+
    return requiredFields.every( (field) => {
         return foundHeaders.includes(field) && JSONobj[field] !== undefined;
     });
-}
+};
 
 /** prepares data for output */
-function prepareData (arrJsonObj) {
+const prepareData = (arrJsonObj) => {
     const guessedData = getGuessedData(arrJsonObj);
+    /** successfully saved data */
+    const prepData = [];
+    /** failed saved data */
+    const unpreparedData = [];
 
     guessedData.forEach( jsonObj => {
         if(checkIfRequiredFieldsExist(jsonObj)) {
@@ -116,12 +117,12 @@ function prepareData (arrJsonObj) {
         "failed": unpreparedData
     };
 
-}
+};
 
 /** Forms guessed structure */
-function getGuessedData(arrJsonObj) {
+const getGuessedData = (arrJsonObj) => {
 
-    let preparedData = [];
+    const preparedData = [];
 
     arrJsonObj.forEach( arrJSONobj => {
         preparedData.push(generalizeData([arrJSONobj], guessHeaders(Object.keys(arrJSONobj)))[0]);
@@ -129,14 +130,14 @@ function getGuessedData(arrJsonObj) {
 
     return preparedData;
 
-}
+};
 
 /** Gets data before save it to db */
-function getPreparedData(arrJsonObj) {
+const getPreparedData = (arrJsonObj) => {
     assert(Array.isArray(arrJsonObj), 'arrJsonObj is not an array');
 
     return prepareData(arrJsonObj);
-}
+};
 
 
 module.exports.getPreparedData = getPreparedData;

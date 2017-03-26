@@ -9,6 +9,7 @@
     "bluebird": "^3.5.0",
     "mime": "^1.3.4",
     "moment": "^2.18.1",
+    "mongoose": "^4.9.1",
     "xlsx": "^0.9.0"
   },
   "devDependencies": {

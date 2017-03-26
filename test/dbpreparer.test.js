@@ -171,7 +171,7 @@ describe('dbPreparer', () => {
                 "example": "value",
                 "example2": "value"
             }
-        ])["failed"].should.deep.include.members([
+        ])["failed"].should.deep.equal([
             {
                 "birthday": undefined,
                 "firstName": undefined,

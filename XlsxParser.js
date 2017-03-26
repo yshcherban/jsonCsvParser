@@ -11,11 +11,11 @@ const   path    = require('path'),
 
 const readXlsxFile = Promise.method(XLSX.readFile);
 
-function canParseFile(file) {
+const canParseFile = (file) => {
     return (path.extname(file) === '.xlsx') || (mime.lookup(file) === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 }
 
-function parse(file) {
+const parse = (file) => {
     return readXlsxFile(file).then(readFile => {
         return XLSX.utils.sheet_to_json(readFile.Sheets[readFile.SheetNames[0]]) || [];
     }).catch(e => {

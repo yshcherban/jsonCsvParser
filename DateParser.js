@@ -6,10 +6,10 @@ const   moment = require('moment'),
  * @param {string} date
  * @returns {Date} recognized date
  */
-const getBdayDateFormat = function (date) {
+const getBdayDateFormat = (date) => {
     assert(typeof date === 'string', 'date is not a string');
 
-    moment.parseTwoDigitYear = function (input) {
+    moment.parseTwoDigitYear = (input) => {
         return parseInt(input) + (parseInt(input) > 54 ? 1900 : 2000);
     };
 

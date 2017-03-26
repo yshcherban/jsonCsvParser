@@ -10,19 +10,19 @@ const   baby    = require('babyparse'),
  * @function getPromiseFromCSVFile( <string> | <Buffer> | <integer> ) - reads the file and returns a parse results object
  */
 
-function canParseFile(file) {
+const canParseFile = (file) => {
     return (path.extname(file) === '.csv') || (mime.lookup(file) === 'text/csv');
-}
+};
 
-function parse(file) {
+const parse = (file) => {
     return getPromiseFromCSVFile(file).then(result => {
         return result.data || [];
     }).catch(e => {
         throw new Error(e.message);
     });
-}
+};
 
-function getPromiseFromCSVFile(file) {
+const getPromiseFromCSVFile = (file) => {
     return new Promise((resolve, reject) => {
         const parsedResponse = baby.parseFiles(file, {
             header:     true,
@@ -36,10 +36,10 @@ function getPromiseFromCSVFile(file) {
         });
         if (parsedResponse.errors.length > 0) {
             reject(new Error(parsedResponse.errors[0].message));
-        };
+        }
         // no return
     });
-}
+};
 
 module.exports.canParseFile = canParseFile;
 module.exports.parse = parse;
